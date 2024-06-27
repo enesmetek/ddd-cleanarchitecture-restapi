@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
     // builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
-    
+
 }
 
 var app = builder.Build();
@@ -21,7 +21,7 @@ var app = builder.Build();
     //    Exception? exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
     //    return Results.Problem();
     //});
-    
+
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();

@@ -3,8 +3,10 @@ using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Services;
 using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Persistence;
+using BuberDinner.Infrastructure.Persistence.Repositories;
 using BuberDinner.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -15,7 +17,7 @@ namespace BuberDinner.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration) 
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
         {
             services
                 .AddAuth(configuration)
@@ -24,8 +26,10 @@ namespace BuberDinner.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddPersistance(this IServiceCollection services) 
+        public static IServiceCollection AddPersistance(this IServiceCollection services)
         {
+            services.AddDbContext<BuberDinnerDbContext>(options =>
+                options.UseSqlServer("Server=127.0.0.1,1433; Database=BuberDinner; User=sa; Password=Dfmp9436!; TrustServerCertificate=true; MultipleActiveResultSets=true"));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             return services;
@@ -35,7 +39,7 @@ namespace BuberDinner.Infrastructure
         {
             JWTSettings jwtSettings = new();
             configuration.Bind(JWTSettings.SectionName, jwtSettings);
-            services.AddSingleton(Options.Create(jwtSettings)); 
+            services.AddSingleton(Options.Create(jwtSettings));
 
             services.AddSingleton<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
@@ -53,4 +57,3 @@ namespace BuberDinner.Infrastructure
         }
     }
 }
-    

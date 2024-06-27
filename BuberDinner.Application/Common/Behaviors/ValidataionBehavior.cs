@@ -15,8 +15,8 @@ namespace BuberDinner.Application.Common.Behaviors
                 return await next();
 
             // TODO: Validate request
-            ValidationResult? validationResult = await _validator.ValidateAsync(request, cancellationToken); 
-            
+            ValidationResult? validationResult = await _validator.ValidateAsync(request, cancellationToken);
+
             if (validationResult.IsValid)
                 return await next();
 

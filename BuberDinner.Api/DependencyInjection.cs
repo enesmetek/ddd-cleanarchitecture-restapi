@@ -12,6 +12,6 @@ namespace BuberDinner.Api
             services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
             services.AddMappings();
             return services;
-        }   
+        }
     }
 }

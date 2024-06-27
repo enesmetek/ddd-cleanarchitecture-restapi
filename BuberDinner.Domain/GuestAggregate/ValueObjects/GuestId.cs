@@ -1,35 +1,23 @@
 ﻿using BuberDinner.Domain.Common.Models;
-using BuberDinner.Domain.UserAggregate.ValueObjects;
 
-namespace BuberDinner.Domain.GuestAggregate.ValueObjects
+namespace BuberDinner.Domain.GuestAggregate.ValueObjects;
+
+public sealed class GuestId : ValueObject
 {
-    public class GuestId : ValueObject
+    public Guid Value { get; }
+
+    private GuestId(Guid guid)
     {
-        public string Value { get; }
+        Value = guid;
+    }
 
-        public GuestId(UserId userId)
-        {
-            Value = $"Guest_{userId.Value}";
-        }
+    public static GuestId CreateUnique()
+    {
+        return new GuestId(Guid.NewGuid());
+    }
 
-        public GuestId(string userId)
-        {
-            Value = userId;
-        }
-
-        internal static GuestId Create(UserId userId)
-        {
-            return new GuestId(userId);
-        }
-
-        public static GuestId Create(string userId)
-        {
-            return new GuestId(userId);
-        }
-
-        public override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
+    public override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
     }
 }

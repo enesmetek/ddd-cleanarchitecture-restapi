@@ -2,39 +2,37 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Domain.Common.Errors;
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.UserAggregate;
 using ErrorOr;
 using MediatR;
 
-namespace BuberDinner.Application.Authentication.Commands
+namespace BuberDinner.Application.Authentication.Commands.Register;
+
+public class RegisterCommandHandler(
+    IJWTTokenGenerator jwtTokenGenerator,
+    IUserRepository userRepository) :
+    IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
-    public class RegisterCommandHandler(IUserRepository userRepository, IJWTTokenGenerator jwtGenerator) : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
+    private readonly IJWTTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+    private readonly IUserRepository _userRepository = userRepository;
+
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly IJWTTokenGenerator _jwtGenerator = jwtGenerator;
+        await Task.CompletedTask;
 
-        public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+        if (_userRepository.GetUserByEmail(command.Email) is not null)
         {
-            await Task.CompletedTask;
-            // TODO: Check if user already exists
-            if (_userRepository.GetUserByEmail(command.Email) is not null)
-            {
-                return Errors.User.DuplicateEmail;
-            }
-
-            // TODO: Create user (generate unique id)
-            User user = new()
-            {
-                FirstName = command.FirstName,
-                LastName = command.LastName,
-                Email = command.Email,
-                Password = command.Password
-            };
-            _userRepository.Add(user);
-
-            // TODO: Generate token 
-            string token = _jwtGenerator.GenerateToken(user);
-            return new AuthenticationResult(user, token);
+            return Errors.User.DuplicateEmail;
         }
+
+        var user = User.Create(command.FirstName, command.LastName, command.Email, command.Password);
+
+        _userRepository.Add(user);
+
+        var token = _jwtTokenGenerator.GenerateToken(user);
+
+        return new AuthenticationResult(
+            user,
+            token);
     }
 }

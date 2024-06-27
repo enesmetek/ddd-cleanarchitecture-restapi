@@ -1,37 +1,23 @@
 ﻿using BuberDinner.Domain.Common.Models;
-using BuberDinner.Domain.DinnerAggregate.ValueObjects;
-using BuberDinner.Domain.GuestAggregate.ValueObjects;
-using BuberDinner.Domain.MenuAggregate.ValueObjects;
 
-namespace BuberDinner.Domain.MenuReviewAggregate.ValueObjects
+namespace BuberDinner.Domain.MenuReviewAggregate.ValueObjects;
+
+public sealed class MenuReviewId : ValueObject
 {
-    public sealed class MenuReviewId : ValueObject
+    public Guid Value { get; private set; }
+
+    private MenuReviewId(Guid value)
     {
-        public string Value { get; }
+        Value = value;
+    }
 
-        private MenuReviewId(MenuId menuId, DinnerId dinnerId, GuestId guestId)
-        {
-            Value = $"MenuReview_{menuId.Value}_{dinnerId.Value}_{guestId.Value}";
-        }
+    public static MenuReviewId CreateUnique()
+    {
+        return new MenuReviewId(Guid.NewGuid());
+    }
 
-        private MenuReviewId(string value)
-        {
-            Value = value;
-        }
-
-        public static MenuReviewId Create(MenuId menuId, DinnerId dinnerId, GuestId guestId)
-        {
-            return new MenuReviewId(menuId, dinnerId, guestId);
-        }
-
-        public static MenuReviewId Create(string value)
-        {
-            return new MenuReviewId(value);
-        }
-
-        public override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
+    public override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
     }
 }

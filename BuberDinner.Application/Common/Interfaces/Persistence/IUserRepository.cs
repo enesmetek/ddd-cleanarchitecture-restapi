@@ -1,4 +1,4 @@
-﻿using BuberDinner.Domain.Entities;
+﻿using BuberDinner.Domain.UserAggregate;
 
 namespace BuberDinner.Application.Common.Interfaces.Persistence
 {
@@ -8,4 +8,3 @@ namespace BuberDinner.Application.Common.Interfaces.Persistence
         void Add(User user);
     }
 }
-    

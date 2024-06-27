@@ -6,6 +6,5 @@ namespace BuberDinner.Application.Common.Errors
     {
         public HttpStatusCode StatusCode { get; }
         public string ErrorMessage { get; }
-
     }
 }

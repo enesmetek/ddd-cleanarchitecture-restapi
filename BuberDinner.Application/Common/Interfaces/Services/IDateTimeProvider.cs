@@ -5,4 +5,3 @@
         DateTime UtcNow { get; }
     }
 }
-    

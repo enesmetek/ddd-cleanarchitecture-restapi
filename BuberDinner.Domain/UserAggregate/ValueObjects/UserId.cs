@@ -1,29 +1,28 @@
 ﻿using BuberDinner.Domain.Common.Models;
 
-namespace BuberDinner.Domain.UserAggregate.ValueObjects
+namespace BuberDinner.Domain.UserAggregate.ValueObjects;
+
+public sealed class UserId : ValueObject
 {
-    public sealed class UserId : ValueObject
+    private UserId(Guid value)
     {
-        private UserId(Guid value)
-        {
-            Value = value;
-        }
+        Value = value;
+    }
 
-        public Guid Value { get; }
+    public Guid Value { get; }
 
-        public static UserId CreateUnique()
-        {
-            return new UserId(new Guid());
-        }
+    public static UserId CreateUnique()
+    {
+        return new UserId(Guid.NewGuid());
+    }
 
-        public static UserId Create(Guid userId)
-        {
-            return new UserId(userId);
-        }
+    public static UserId Create(Guid userId)
+    {
+        return new UserId(userId);
+    }
 
-        public override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
+    public override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
     }
 }
